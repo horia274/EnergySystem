@@ -141,6 +141,38 @@ public class Distributor {
         contracts.add(contract);
     }
 
+    public void removeInvalidContracts() {
+        contracts.removeIf(contract -> !contract.isValid() && contract.wasPaid());
+    }
+
+    public void removeBankruptConsumers() {
+        contracts.removeIf(contract -> contract.getConsumer().isBankrupt());
+    }
+
+    public void removeContractsIfIsBankrupt() {
+        if (isBankrupt) {
+            contracts.clear();
+        }
+    }
+
+    public void earnMoneyFromConsumers() {
+        for (Contract contract : contracts) {
+            Consumer currentConsumer = contract.getConsumer();
+            Contract currentContract = currentConsumer.getContract();
+            Contract oldContract = currentConsumer.getOldContract();
+
+            if (currentConsumer.isBankrupt() || currentContract.isExpired()) {
+                continue;
+            }
+            else if (currentConsumer.hasOverduePayment()) {
+                budget += (int) Math.round(Math.floor(1.2 * oldContract.getPrice()));
+            }
+            else if (currentContract.wasPaid()){
+                budget += currentContract.getPrice();
+            }
+        }
+    }
+
     private int computePayment() {
         return infrastructureCost + productionCost * contracts.size();
     }
