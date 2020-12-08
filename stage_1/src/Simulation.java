@@ -2,34 +2,39 @@ import entities.Consumer;
 import entities.Contract;
 import entities.Distributor;
 import entities.factory.ConsumerFactory;
-import fileio.input.*;
+import entities.factory.ConsumerFactory.ConsumerType;
+import fileio.input.InputData;
+import fileio.input.MonthlyUpdateInputData;
+import fileio.input.ConsumerInputData;
+import fileio.input.DistributorInputData;
+import fileio.input.CostChangesInputData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Simulation {
-    private List<Consumer> consumers;
-    private List<Distributor> distributors;
-    private int numberOfTurns;
-    private List<MonthlyUpdateInputData> monthlyUpdates;
+public final class Simulation {
+    private final ConsumerFactory factory;
+    private final List<Consumer> consumers;
+    private final List<Distributor> distributors;
+    private final List<MonthlyUpdateInputData> monthlyUpdates;
 
-    public Simulation(InputData inputData) {
-        List<ConsumerInputData> consumerInputData = inputData.getInitialData().getConsumers();
+    public Simulation(final InputData inputData) {
+        factory = ConsumerFactory.getInstance();
+        List<ConsumerInputData> consumerInput = inputData.getInitialData().getConsumers();
         consumers = new ArrayList<>();
-        for (ConsumerInputData consumer : consumerInputData) {
+        for (ConsumerInputData consumer : consumerInput) {
             Consumer currentConsumer;
-            currentConsumer = ConsumerFactory.getInstance().createConsumer(ConsumerFactory.ConsumerType.Concrete, consumer);
+            currentConsumer = factory.createConsumer(ConsumerType.Concrete, consumer);
             consumers.add(currentConsumer);
         }
 
-        List<DistributorInputData> distributorInputData = inputData.getInitialData().getDistributors();
+        List<DistributorInputData> distributorInput = inputData.getInitialData().getDistributors();
         distributors = new ArrayList<>();
-        for (DistributorInputData distributor : distributorInputData) {
+        for (DistributorInputData distributor : distributorInput) {
             Distributor currentDistributor = new Distributor(distributor);
             distributors.add(currentDistributor);
         }
 
-        numberOfTurns = inputData.getNumberOfTurns();
         monthlyUpdates = inputData.getMonthlyUpdates();
     }
 
@@ -41,59 +46,85 @@ public class Simulation {
         return distributors;
     }
 
+    /**
+     * compute first round of simulation
+     */
     private void firstTurn() {
         for (Distributor distributor : distributors) {
             if (!distributor.isBankrupt()) {
+                /* recalculate contracts price */
                 distributor.computeContractPrice();
+                /* remove invalid contracts */
                 distributor.removeInvalidContracts();
             }
         }
 
         for (Consumer consumer : consumers) {
             if (!consumer.isBankrupt()) {
+                /* receive salary */
                 consumer.earnSalary();
+                /* choose contract */
                 consumer.chooseContract(distributors);
 
+                /* add contract to distributor list of contracts */
                 Contract contract = consumer.getContract();
                 Distributor chosenDistributor = contract.getDistributor();
                 chosenDistributor.addContract(contract);
 
+                /* pay contract */
                 consumer.payBill();
+                /* decrease duration of contract */
                 contract.decreaseContractMonths();
             }
         }
 
-        for(Distributor distributor : distributors) {
+        for (Distributor distributor : distributors) {
             if (!distributor.isBankrupt()) {
-                distributor.removeContractsIfIsBankrupt();
+                /* receive money from consumers */
                 distributor.earnMoneyFromConsumers();
+                /* pay bill */
                 distributor.payBill();
+                /* remove bankrupt consumers */
                 distributor.removeBankruptConsumers();
+            } else {
+                /* removed all contracts if is bankrupt */
+                distributor.removeContractsIfIsBankrupt();
             }
         }
     }
 
-    private void simulateTurn(MonthlyUpdateInputData monthlyUpdate) {
+    /**
+     * simulate intermediate round
+     * @param monthlyUpdate new consumers list and new distributors attributes
+     */
+    private void simulateTurn(final MonthlyUpdateInputData monthlyUpdate) {
         List<ConsumerInputData> newConsumers = monthlyUpdate.getNewConsumers();
         List<CostChangesInputData> costsChanges = monthlyUpdate.getCostsChanges();
 
+        /* update consumers list */
         for (ConsumerInputData newConsumer : newConsumers) {
             Consumer currentConsumer;
-            currentConsumer = ConsumerFactory.getInstance().createConsumer(ConsumerFactory.ConsumerType.Concrete, newConsumer);
+            currentConsumer = factory.createConsumer(ConsumerType.Concrete, newConsumer);
             consumers.add(currentConsumer);
         }
 
+        /* update distributors attributes */
         for (CostChangesInputData costChanges : costsChanges) {
-            Distributor currentDistributor = Distributor.findDistributor(distributors, costChanges.getId());
+            int id = costChanges.getId();
+            Distributor currentDistributor = Distributor.findDistributor(distributors, id);
             if (currentDistributor != null) {
                 currentDistributor.setInfrastructureCost(costChanges.getInfrastructureCost());
                 currentDistributor.setProductionCost(costChanges.getProductionCost());
             }
         }
 
+        /* simulate round 0 */
         firstTurn();
     }
 
+    /**
+     * simulate the entire procedure
+     */
     public void simulateAllTurns() {
         firstTurn();
         for (MonthlyUpdateInputData monthlyUpdate : monthlyUpdates) {

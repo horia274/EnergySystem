@@ -2,15 +2,19 @@ package entities;
 
 import java.util.Objects;
 
-public class Contract {
-    private Consumer consumer;
-    private Distributor distributor;
-    private int contractLength;
+public final class Contract {
+    private final Consumer consumer;
+    private final Distributor distributor;
+    private final int contractLength;
+    private final int price;
+
     private int remainedContractMonths;
-    private int price;
     private boolean paymentStatus;
 
-    public Contract(Consumer consumer, Distributor distributor, int contractLength, int price) {
+    public Contract(final Consumer consumer,
+                    final Distributor distributor,
+                    final int contractLength,
+                    final int price) {
         this.consumer = consumer;
         this.distributor = distributor;
         this.contractLength = contractLength;
@@ -23,66 +27,46 @@ public class Contract {
         return consumer;
     }
 
-    public void setConsumer(Consumer consumer) {
-        this.consumer = consumer;
-    }
-
     public Distributor getDistributor() {
         return distributor;
-    }
-
-    public void setDistributor(Distributor distributor) {
-        this.distributor = distributor;
     }
 
     public int getContractLength() {
         return contractLength;
     }
 
-    public void setContractLength(int contractLength) {
-        this.contractLength = contractLength;
-    }
-
     public int getRemainedContractMonths() {
         return remainedContractMonths;
-    }
-
-    public void setRemainedContractMonths(int remainedContractMonths) {
-        this.remainedContractMonths = remainedContractMonths;
     }
 
     public int getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
+    /**
+     * check if contract was paid by consumer
+     * @return Boolean object
+     */
     public boolean wasPaid() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(boolean paymentStatus) {
+    /**
+     * set contract payment status, if consumer pays, than true, else false
+     * @param paymentStatus new status
+     */
+    public void setPaymentStatus(final boolean paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 
     @Override
-    public String toString() {
-        return "Contract{" +
-                "consumerId=" + consumer.getId() +
-                ", distributorId=" + distributor.getId() +
-                ", contractLength=" + contractLength +
-                ", remainedContractMonths=" + remainedContractMonths +
-                ", price=" + price +
-                ", paymentStatus=" + paymentStatus +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Contract contract = (Contract) o;
         return consumer.equals(contract.consumer) && distributor.equals(contract.distributor);
     }
@@ -92,15 +76,26 @@ public class Contract {
         return Objects.hash(consumer, distributor);
     }
 
+    /**
+     * decrease contract duration
+     */
     public void decreaseContractMonths() {
         remainedContractMonths -= 1;
     }
 
+    /**
+     * check if is still valid
+     * @return Boolean object
+     */
     public boolean isValid() {
         return remainedContractMonths > 0;
     }
 
-    public boolean isExpired(){
+    /**
+     * check if is expired
+     * @return Boolean object
+     */
+    public boolean isExpired() {
         return remainedContractMonths < 0;
     }
 }

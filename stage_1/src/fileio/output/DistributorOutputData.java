@@ -6,13 +6,16 @@ import entities.Distributor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistributorOutputData {
-    private int id;
-    private int budget;
-    private boolean isBankrupt;
-    private List<ContractOutput> contracts;
+/**
+ * contains distributor information for output
+ */
+public final class DistributorOutputData {
+    private final int id;
+    private final int budget;
+    private final boolean isBankrupt;
+    private final List<ContractOutput> contracts;
 
-    public DistributorOutputData(Distributor distributor) {
+    public DistributorOutputData(final Distributor distributor) {
         id = distributor.getId();
         budget = distributor.getBudget();
         isBankrupt = distributor.isBankrupt();
@@ -26,31 +29,15 @@ public class DistributorOutputData {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getBudget() {
         return budget;
-    }
-
-    public void setBudget(int budget) {
-        this.budget = budget;
     }
 
     public boolean getIsBankrupt() {
         return isBankrupt;
     }
 
-    public void setIsBankrupt(boolean bankrupt) {
-        isBankrupt = bankrupt;
-    }
-
     public List<ContractOutput> getContracts() {
         return contracts;
-    }
-
-    public void setContracts(List<ContractOutput> contracts) {
-        this.contracts = contracts;
     }
 }

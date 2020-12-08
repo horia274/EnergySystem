@@ -2,12 +2,15 @@ package fileio.output;
 
 import entities.Consumer;
 
-public class ConsumerOutputData {
-    private int id;
-    private boolean isBankrupt;
-    private int budget;
+/**
+ * contains consumer information for output
+ */
+public final class ConsumerOutputData {
+    private final int id;
+    private final boolean isBankrupt;
+    private final int budget;
 
-    public ConsumerOutputData(Consumer consumer) {
+    public ConsumerOutputData(final Consumer consumer) {
         id = consumer.getId();
         isBankrupt = consumer.isBankrupt();
         budget = consumer.getBudget();
@@ -17,23 +20,11 @@ public class ConsumerOutputData {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public boolean getIsBankrupt() {
         return isBankrupt;
     }
 
-    public void setIsBankrupt(boolean bankrupt) {
-        isBankrupt = bankrupt;
-    }
-
     public int getBudget() {
         return budget;
-    }
-
-    public void setBudget(int budget) {
-        this.budget = budget;
     }
 }

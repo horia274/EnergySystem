@@ -1,11 +1,27 @@
+import entities.Consumer;
+import entities.Distributor;
 import fileio.input.InputData;
 import fileio.input.InputLoader;
 import fileio.output.OutputData;
 import fileio.output.OutputLoader;
 
-public class Main {
+import java.util.List;
 
-    public static void main(String[] args) throws Exception {
+public final class Main {
+
+    private Main() { }
+
+    /**
+     *
+     * @param args contains input and output paths
+     */
+    public static void main(final String[] args) {
+
+        if (args.length != 2) {
+            System.out.println("Proper Usage is: input path, output path");
+            System.exit(-1);
+        }
+
         String inputPath = args[0];
         String outputPath = args[1];
 
@@ -15,7 +31,10 @@ public class Main {
         Simulation simulation = new Simulation(inputData);
         simulation.simulateAllTurns();
 
-        OutputData outputData = new OutputData(simulation.getConsumers(), simulation.getDistributors());
+        List<Consumer> consumers = simulation.getConsumers();
+        List<Distributor> distributors = simulation.getDistributors();
+
+        OutputData outputData = new OutputData(consumers, distributors);
         OutputLoader outputLoader = new OutputLoader(outputPath, outputData);
         outputLoader.writeData();
     }

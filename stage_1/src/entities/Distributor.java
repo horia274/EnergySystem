@@ -1,24 +1,26 @@
 package entities;
 
+import constants.Const;
 import fileio.input.DistributorInputData;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Objects;
 
-public class Distributor {
+public final class Distributor {
     private final int id;
     private final int contractLength;
     private int budget;
     private int infrastructureCost;
     private int productionCost;
     private int profit;
+
     private boolean isBankrupt;
-    private List<Contract> contracts;
+
+    private final List<Contract> contracts;
     private int contractPrice;
 
-    public Distributor(DistributorInputData distributorInputData) {
+    public Distributor(final DistributorInputData distributorInputData) {
         id = distributorInputData.getId();
         contractLength = distributorInputData.getContractLength();
         budget = distributorInputData.getInitialBudget();
@@ -39,15 +41,11 @@ public class Distributor {
         return budget;
     }
 
-    public void setBudget(int budget) {
-        this.budget = budget;
-    }
-
     public int getInfrastructureCost() {
         return infrastructureCost;
     }
 
-    public void setInfrastructureCost(int infrastructureCost) {
+    public void setInfrastructureCost(final int infrastructureCost) {
         this.infrastructureCost = infrastructureCost;
     }
 
@@ -55,53 +53,34 @@ public class Distributor {
         return productionCost;
     }
 
-    public void setProductionCost(int productionCost) {
+    public void setProductionCost(final int productionCost) {
         this.productionCost = productionCost;
-    }
-
-    public int getProfit() {
-        return profit;
-    }
-
-    public void setProfit(int profit) {
-        this.profit = profit;
     }
 
     public int getContractPrice() {
         return contractPrice;
     }
 
-    public void setContractPrice(int contractPrice) {
-        this.contractPrice = contractPrice;
-    }
-
-    public boolean isBankrupt() {
-        return isBankrupt;
-    }
-
     public List<Contract> getContracts() {
         return contracts;
     }
 
-    @Override
-    public String toString() {
-        return "Distributor{" +
-                "id=" + id +
-                ", contractLength=" + contractLength +
-                ", budget=" + budget +
-                ", infrastructureCost=" + infrastructureCost +
-                ", productionCost=" + productionCost +
-                ", profit=" + profit +
-                ", isBankrupt=" + isBankrupt +
-                ", contracts=" + contracts +
-                ", contractPrice=" + contractPrice +
-                '}';
+    /**
+     * check if is bankrupt
+     * @return Boolean object
+     */
+    public boolean isBankrupt() {
+        return isBankrupt;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+    public boolean equals(final Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Distributor that = (Distributor) o;
         return id == that.id;
     }
@@ -111,21 +90,34 @@ public class Distributor {
         return Objects.hash(id);
     }
 
+    /**
+     * compute profit
+     */
     private void computeProfit() {
-        profit = (int) Math.round(Math.floor(0.2 * productionCost));
-
+        profit = (int) Math.round(Math.floor(Const.PROFIT * productionCost));
     }
 
+    /**
+     * compute contract price
+     */
     public void computeContractPrice() {
         computeProfit();
-        if (contracts.size() == 0) {
-            contractPrice = infrastructureCost + productionCost + profit;
+        if (contracts.size() != 0) {
+            contractPrice = (int) Math.round(Math.floor(infrastructureCost
+                                                        / (double) contracts.size())
+                                                        + productionCost + profit);
         } else {
-            contractPrice = (int) Math.round(Math.floor(infrastructureCost / contracts.size()) + productionCost + profit);
+            contractPrice = infrastructureCost + productionCost + profit;
         }
     }
 
-    public static Distributor findDistributor(List<Distributor> distributors, int id) {
+    /**
+     * search for a distributor by id in a list of distributors
+     * @param distributors list of distributors
+     * @param id searched id
+     * @return Distributor object on null if not found
+     */
+    public static Distributor findDistributor(final List<Distributor> distributors, final int id) {
         for (Distributor distributor : distributors) {
             if (distributor.id == id) {
                 return distributor;
@@ -134,49 +126,72 @@ public class Distributor {
         return null;
     }
 
-    public void addContract(Contract contract) {
+    /**
+     * add contract to contracts list
+     * @param contract contract that will be added
+     */
+    public void addContract(final Contract contract) {
         if (contracts.contains(contract)) {
             return;
         }
         contracts.add(contract);
     }
 
+    /**
+     * remove contracts that are no longer valid
+     * contract length passed and was paid every month
+     */
     public void removeInvalidContracts() {
         contracts.removeIf(contract -> !contract.isValid() && contract.wasPaid());
     }
 
+    /**
+     * remove contract if consumer is bankrupt
+     */
     public void removeBankruptConsumers() {
         contracts.removeIf(contract -> contract.getConsumer().isBankrupt());
     }
 
+    /**
+     * remove all contracts if current distributor becomes bankrupt
+     */
     public void removeContractsIfIsBankrupt() {
         if (isBankrupt) {
             contracts.clear();
         }
     }
 
+    /**
+     * add all payments from consumers
+     */
     public void earnMoneyFromConsumers() {
         for (Contract contract : contracts) {
             Consumer currentConsumer = contract.getConsumer();
             Contract currentContract = currentConsumer.getContract();
             Contract oldContract = currentConsumer.getOldContract();
 
-            if (currentConsumer.isBankrupt() || currentContract.isExpired()) {
-                continue;
-            }
-            else if (currentConsumer.hasOverduePayment()) {
-                budget += (int) Math.round(Math.floor(1.2 * oldContract.getPrice()));
-            }
-            else if (currentContract.wasPaid()){
-                budget += currentContract.getPrice();
+            /* check if contract can be paid and if it has an overdue payment */
+            if (!currentConsumer.isBankrupt() && !currentContract.isExpired()) {
+                if (currentConsumer.hasOverduePayment()) {
+                    budget += (int) Math.round(Math.floor(Const.OVERDUE * oldContract.getPrice()));
+                } else if (currentContract.wasPaid()) {
+                    budget += currentContract.getPrice();
+                }
             }
         }
     }
 
+    /**
+     * compute payment
+     * @return total payment
+     */
     private int computePayment() {
         return infrastructureCost + productionCost * contracts.size();
     }
 
+    /**
+     * pay bill
+     */
     public void payBill() {
         budget -= computePayment();
         if (budget < 0) {

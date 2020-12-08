@@ -4,14 +4,18 @@ import entities.ConcreteConsumer;
 import entities.Consumer;
 import fileio.input.ConsumerInputData;
 
-public class ConsumerFactory {
-    public static ConsumerFactory consumerFactoryInstance;
+public final class ConsumerFactory {
+    private static ConsumerFactory consumerFactoryInstance;
     public enum ConsumerType {
         Concrete
     }
 
-    private ConsumerFactory() {}
+    private ConsumerFactory() { }
 
+    /**
+     * make singleton instance for consumer factory
+     * @return instance
+     */
     public static ConsumerFactory getInstance() {
         if (consumerFactoryInstance == null) {
             consumerFactoryInstance = new ConsumerFactory();
@@ -19,10 +23,17 @@ public class ConsumerFactory {
         return consumerFactoryInstance;
     }
 
-    public Consumer createConsumer(ConsumerType consumerType, ConsumerInputData consumer) {
-        switch (consumerType) {
-            case Concrete: return new ConcreteConsumer(consumer);
+    /**
+     *
+     * @param consumerType type of consumer, now it is just one type
+     * @param consumer ConsumerInputData object who forms the Consumer object
+     * @return general Consumer type
+     */
+    public Consumer createConsumer(final ConsumerType consumerType,
+                                   final ConsumerInputData consumer) {
+        if (consumerType == ConsumerType.Concrete) {
+            return new ConcreteConsumer(consumer);
         }
-        throw new IllegalArgumentException("The consumer type " + consumerType + " is not recognized");
+        throw new IllegalArgumentException("Consumer type " + consumerType + " is not recognized");
     }
 }

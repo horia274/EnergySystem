@@ -2,7 +2,10 @@ package fileio.input;
 
 import java.util.List;
 
-public class InputData {
+/**
+ * contains input information
+ */
+public final class InputData {
     private int numberOfTurns;
     private InitialInputData initialData;
     private List<MonthlyUpdateInputData> monthlyUpdates;
@@ -11,7 +14,7 @@ public class InputData {
         return numberOfTurns;
     }
 
-    public void setNumberOfTurns(int numberOfTurns) {
+    public void setNumberOfTurns(final int numberOfTurns) {
         this.numberOfTurns = numberOfTurns;
     }
 
@@ -19,7 +22,7 @@ public class InputData {
         return initialData;
     }
 
-    public void setInitialData(InitialInputData initialData) {
+    public void setInitialData(final InitialInputData initialData) {
         this.initialData = initialData;
     }
 
@@ -27,7 +30,7 @@ public class InputData {
         return monthlyUpdates;
     }
 
-    public void setMonthlyUpdates(List<MonthlyUpdateInputData> monthlyUpdates) {
+    public void setMonthlyUpdates(final List<MonthlyUpdateInputData> monthlyUpdates) {
         this.monthlyUpdates = monthlyUpdates;
     }
 }

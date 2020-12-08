@@ -2,7 +2,10 @@ package fileio.input;
 
 import java.util.List;
 
-public class MonthlyUpdateInputData {
+/**
+ * contains monthly update information from input
+ */
+public final class MonthlyUpdateInputData {
     private List<ConsumerInputData> newConsumers;
     private List<CostChangesInputData> costsChanges;
 
@@ -10,7 +13,7 @@ public class MonthlyUpdateInputData {
         return newConsumers;
     }
 
-    public void setNewConsumers(List<ConsumerInputData> newConsumers) {
+    public void setNewConsumers(final List<ConsumerInputData> newConsumers) {
         this.newConsumers = newConsumers;
     }
 
@@ -18,7 +21,7 @@ public class MonthlyUpdateInputData {
         return costsChanges;
     }
 
-    public void setCostsChanges(List<CostChangesInputData> costsChanges) {
+    public void setCostsChanges(final List<CostChangesInputData> costsChanges) {
         this.costsChanges = costsChanges;
     }
 }

@@ -6,11 +6,14 @@ import entities.Distributor;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OutputData {
-    private List<ConsumerOutputData> consumers;
-    private List<DistributorOutputData> distributors;
+/**
+ * contains output information
+ */
+public final class OutputData {
+    private final List<ConsumerOutputData> consumers;
+    private final List<DistributorOutputData> distributors;
 
-    public OutputData(List<Consumer> consumers, List<Distributor> distributors) {
+    public OutputData(final List<Consumer> consumers, final List<Distributor> distributors) {
         this.consumers = new ArrayList<>();
         for (Consumer consumer : consumers) {
             this.consumers.add(new ConsumerOutputData(consumer));
@@ -26,15 +29,7 @@ public class OutputData {
         return consumers;
     }
 
-    public void setConsumers(List<ConsumerOutputData> consumers) {
-        this.consumers = consumers;
-    }
-
     public List<DistributorOutputData> getDistributors() {
         return distributors;
-    }
-
-    public void setDistributors(List<DistributorOutputData> distributors) {
-        this.distributors = distributors;
     }
 }

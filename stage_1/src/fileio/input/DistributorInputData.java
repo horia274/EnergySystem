@@ -1,6 +1,9 @@
 package fileio.input;
 
-public class DistributorInputData {
+/**
+ * contains distributor information from input
+ */
+public final class DistributorInputData {
     private int id;
     private int contractLength;
     private int initialBudget;
@@ -11,7 +14,7 @@ public class DistributorInputData {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(final int id) {
         this.id = id;
     }
 
@@ -19,7 +22,7 @@ public class DistributorInputData {
         return contractLength;
     }
 
-    public void setContractLength(int contractLength) {
+    public void setContractLength(final int contractLength) {
         this.contractLength = contractLength;
     }
 
@@ -27,7 +30,7 @@ public class DistributorInputData {
         return initialBudget;
     }
 
-    public void setInitialBudget(int initialBudget) {
+    public void setInitialBudget(final int initialBudget) {
         this.initialBudget = initialBudget;
     }
 
@@ -35,7 +38,7 @@ public class DistributorInputData {
         return initialInfrastructureCost;
     }
 
-    public void setInitialInfrastructureCost(int initialInfrastructureCost) {
+    public void setInitialInfrastructureCost(final int initialInfrastructureCost) {
         this.initialInfrastructureCost = initialInfrastructureCost;
     }
 
@@ -43,7 +46,7 @@ public class DistributorInputData {
         return initialProductionCost;
     }
 
-    public void setInitialProductionCost(int initialProductionCost) {
+    public void setInitialProductionCost(final int initialProductionCost) {
         this.initialProductionCost = initialProductionCost;
     }
 }

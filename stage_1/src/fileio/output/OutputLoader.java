@@ -1,24 +1,34 @@
 package fileio.output;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import fileio.input.InputData;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import java.io.File;
 import java.io.IOException;
 
-public class OutputLoader {
+public final class OutputLoader {
+    /**
+     * json path
+     */
     private final String outputPath;
-    private OutputData outputData;
+    /**
+     * object written in json file
+     */
+    private final OutputData outputData;
 
-    public OutputLoader(String outputPath, OutputData outputData) {
+    public OutputLoader(final String outputPath, final OutputData outputData) {
         this.outputPath = outputPath;
         this.outputData = outputData;
     }
 
-    public void writeData() throws IOException {
+    /**
+     * write OutputData object in json file
+     */
+    public void writeData() {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(outputPath), outputData);
+            ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();
+            objectWriter.writeValue(new File(outputPath), outputData);
         } catch (IOException e) {
             System.out.println("Could not create output file");
             System.exit(-1);
