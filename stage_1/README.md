@@ -6,8 +6,7 @@ Am creat multiple *clase de input* pentru parsarea fisierelor json si incarcarea
 lor in obiecte. Acest obiect format va fi o instanta a clasei **InputData**.
 
 *Clasele de output* sunt folosite pentru a forma obiectul de output, de tipul
-**OutputData** si pentru a-l scrie in fisierul json.
-in fisierul json corespunzator.
+**OutputData** si pentru a-l scrie in fisierul json corespunzator.
 
 ### Design pattern-ul Factory
 Am folosit acest design pattern in combinatie cu **Singleton**, intrucat este
@@ -25,7 +24,7 @@ in acest caz, va trebui sa:
 * creez o noua clasa pentru o categorie noua de consumatori, care va trebuie sa
 implementeze **interfata Consumer**;
 
-* adaug noul tip in **clasa ConsumerFactory**;
+* adaug noul tip de consumator in **clasa ConsumerFactory**;
 
 * las restul codului asa cum este, ideea de **incapsulare**.
 
@@ -37,15 +36,21 @@ Astfel, **clasa ConcreteConsumer** implementeaza metodele din **interfata Consum
 cum ar fi: *primirea salariului*, *alegerea unui contract, pe baza unei liste de 
 distribuitori*, *platirea contractului* etc.
 
-Am considerat util sa tin minte la fiecare pas doua contracte, si anume, contractul
-curent, *contract* si contractul pe luna trecuta, *oldContract*, in cazul in care
-consumatorul are de platit facturi restante.
+Pentru un consumator, am considerat util sa tin minte la fiecare pas doua contracte,
+si anume, contractul curent, *contract* si contractul pe luna trecuta, *oldContract*,
+in cazul in care consumatorul are de platit facturi restante.
 
-Distribuitorul implementeaza metode de tipul: *calculul contractului curent*,
-*adaugarea unui contract in lista de contracte*, *primirea banilor de la clienti*,
-*plata facturii* etc.
+Contractul are doua metode de tipul *setter* si *getter*, si anume
+**setPaymentStatus** si **wasPaid**, care sunt utile pentru a verifica daca acesta a
+fost platit de catre consumator. Contractul leaga consumatorul de distribuitor, prin
+includerea acestor campuri in definitia clasei.
 
-Am considerat suficiente comentariile din cod pentru a explica functionalitatile lor.
+Distribuitorul de tipul **Distributor** implementeaza metode de tipul: *calculul
+contractului curent*, *adaugarea unui contract in lista de contracte*, *primirea
+banilor de la clienti*, *plata facturii* etc.
+
+Codul contine comentarii despre functionalitate si implementarile propriu-zise ale
+metodelor.
 
 ### Motorul actiunii
 Este reprezentat de **clasa Simulation**, care contine trei metode principale:
