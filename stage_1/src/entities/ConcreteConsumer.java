@@ -102,6 +102,70 @@ public class ConcreteConsumer implements Consumer {
     }
 
     @Override
+    public void chooseContract(List<Distributor> distributors) {
+        int minPrice = 10000;
+        Distributor chosenDistributor = null;
+
+        if (isBankrupt) {
+            contract = null;
+            oldContract = null;
+        }
+
+        if (contract != null && contract.isValid() && !contract.getDistributor().isBankrupt()) {
+            return;
+        }
+
+        if (distributors == null || distributors.size() == 0) {
+            contract = null;
+            oldContract = null;
+        }
+
+        for (Distributor distributor : distributors) {
+            if (!distributor.isBankrupt() && minPrice > distributor.getContractPrice()) {
+                minPrice = distributor.getContractPrice();
+                chosenDistributor = distributor;
+            }
+        }
+
+        if (chosenDistributor != null) {
+            contract = new Contract(this, chosenDistributor, chosenDistributor.getContractLength(), chosenDistributor.getContractPrice());
+            if (!hasOverduePayment && (oldContract == null || oldContract.wasPaid())) {
+                oldContract = contract;
+            }
+        }
+    }
+
+    private int computePayment() {
+        if (oldContract.wasPaid()) {
+            return contract.getPrice();
+        }
+        return (int) Math.round(Math.floor(1.2 * oldContract.getPrice()) + contract.getPrice());
+    }
+
+    @Override
+    public void payBill() {
+        hasOverduePayment = !oldContract.wasPaid();
+        if (budget >= computePayment()) {
+            budget -= computePayment();
+            contract.setPaymentStatus(true);
+        }
+        else if (!hasOverduePayment) {
+            contract.setPaymentStatus(false);
+        }
+        else {
+            if (budget >= computePayment()) {
+                budget -= computePayment();
+                contract.setPaymentStatus(true);
+            }
+            else {
+                isBankrupt = true;
+                contract = null;
+                oldContract = null;
+            }
+        }
+    }
+
+    @Override
     public boolean isBankrupt() {
         return isBankrupt;
     }
