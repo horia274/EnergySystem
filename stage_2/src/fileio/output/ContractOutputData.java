@@ -5,12 +5,12 @@ import entities.contracts.DistributionContract;
 /**
  * contains contract information for output
  */
-public final class ContractOutput {
+public final class ContractOutputData {
     private final int consumerId;
     private final int price;
     private final int remainedContractMonths;
 
-    public ContractOutput(final DistributionContract distributionContract) {
+    public ContractOutputData(final DistributionContract distributionContract) {
         this.consumerId = distributionContract.getConsumer().getId();
         this.price = distributionContract.getPrice();
         this.remainedContractMonths = distributionContract.getRemainedContractMonths();

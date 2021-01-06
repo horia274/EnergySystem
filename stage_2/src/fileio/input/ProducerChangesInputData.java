@@ -1,6 +1,6 @@
 package fileio.input;
 
-public class ProducerChangesInputData {
+public final class ProducerChangesInputData {
     private int id;
     private int energyPerDistributor;
 

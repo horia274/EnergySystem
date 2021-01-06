@@ -1,4 +1,6 @@
-package entities;
+package entities.observer;
+
+import entities.Producer;
 
 import java.util.List;
 

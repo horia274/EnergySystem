@@ -2,13 +2,15 @@ package entities;
 
 import entities.contracts.ProductionContract;
 import entities.energytypes.EnergyType;
+import entities.observer.DistributorObserver;
+import entities.observer.ProducerObservable;
 import fileio.input.ProducerInputData;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Producer implements ProducerObservable {
+public final class Producer implements ProducerObservable {
     private int id;
     private EnergyType energyType;
     private int maxDistributors;
@@ -19,6 +21,8 @@ public class Producer implements ProducerObservable {
     private final List<DistributorObserver> distributors;
     private boolean isUpdated;
 
+    private List<List<Integer>> allDistributors;
+
     public Producer(ProducerInputData producer, List<Distributor> distributors) {
         id = producer.getId();
         energyType = producer.getEnergyType();
@@ -27,6 +31,7 @@ public class Producer implements ProducerObservable {
         energyPerDistributor = producer.getEnergyPerDistributor();
         this.distributors = new ArrayList<>(distributors);
         isUpdated = true;
+        allDistributors = new ArrayList<>();
     }
 
     public int getId() {
@@ -76,6 +81,14 @@ public class Producer implements ProducerObservable {
 
     public void setProductionContracts(List<ProductionContract> productionContracts) {
         this.productionContracts = productionContracts;
+    }
+
+    public List<List<Integer>> getAllDistributors() {
+        return allDistributors;
+    }
+
+    public void setAllDistributors(List<List<Integer>> allDistributors) {
+        this.allDistributors = allDistributors;
     }
 
     @Override
@@ -132,5 +145,14 @@ public class Producer implements ProducerObservable {
             unregisterAll();
             isUpdated = false;
         }
+    }
+
+    public void addCurrentDistributors() {
+        List<Integer> currentDistributors = new ArrayList<>();
+        for (ProductionContract contract : productionContracts) {
+            Distributor currentDistributor = contract.getDistributor();
+            currentDistributors.add(currentDistributor.getId());
+        }
+        allDistributors.add(currentDistributors);
     }
 }

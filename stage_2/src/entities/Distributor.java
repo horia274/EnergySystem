@@ -3,6 +3,7 @@ package entities;
 import constants.Const;
 import entities.contracts.DistributionContract;
 import entities.contracts.ProductionContract;
+import entities.observer.DistributorObserver;
 import fileio.input.DistributorInputData;
 import strategies.EnergyChoiceStrategyType;
 import strategies.Strategy;

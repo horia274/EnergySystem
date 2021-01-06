@@ -54,6 +54,7 @@ public final class Simulation {
     private void firstTurn() {
         for (Producer producer : producers) {
             producer.notifyObservers(producers);
+            producer.addCurrentDistributors();
         }
 
         for (Distributor distributor : distributors) {
@@ -137,7 +138,6 @@ public final class Simulation {
      */
     private void simulateTurn(final MonthlyUpdateInputData monthlyUpdate) {
         update(monthlyUpdate);
-
         /* simulate round 0 */
         firstTurn();
     }

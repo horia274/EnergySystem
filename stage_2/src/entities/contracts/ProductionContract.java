@@ -5,7 +5,7 @@ import entities.Producer;
 
 import java.util.Objects;
 
-public class ProductionContract {
+public final class ProductionContract {
     private Producer producer;
     private Distributor distributor;
 

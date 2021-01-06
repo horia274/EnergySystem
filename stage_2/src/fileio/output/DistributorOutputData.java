@@ -11,17 +11,23 @@ import java.util.List;
  */
 public final class DistributorOutputData {
     private final int id;
+    private final int energyNeededKW;
+    private final int contractCost;
     private final int budget;
+    private final String producerStrategy;
     private final boolean isBankrupt;
-    private final List<ContractOutput> contracts;
+    private final List<ContractOutputData> contracts;
 
     public DistributorOutputData(final Distributor distributor) {
         id = distributor.getId();
+        energyNeededKW = distributor.getEnergyNeeded();
+        contractCost = distributor.getContractPrice();
         budget = distributor.getBudget();
+        producerStrategy = distributor.getProducerStrategy().getLabel();
         isBankrupt = distributor.isBankrupt();
         contracts = new ArrayList<>();
         for (DistributionContract distributionContract : distributor.getContracts()) {
-            contracts.add(new ContractOutput(distributionContract));
+            contracts.add(new ContractOutputData(distributionContract));
         }
     }
 
@@ -37,7 +43,19 @@ public final class DistributorOutputData {
         return isBankrupt;
     }
 
-    public List<ContractOutput> getContracts() {
+    public List<ContractOutputData> getContracts() {
         return contracts;
+    }
+
+    public int getEnergyNeededKW() {
+        return energyNeededKW;
+    }
+
+    public int getContractCost() {
+        return contractCost;
+    }
+
+    public String getProducerStrategy() {
+        return producerStrategy;
     }
 }

@@ -2,6 +2,8 @@ import entities.Consumer;
 import entities.Distributor;
 import entities.Producer;
 import fileio.input.*;
+import fileio.output.OutputData;
+import fileio.output.OutputLoader;
 
 import java.util.List;
 
@@ -33,8 +35,8 @@ public final class Main {
         List<Distributor> distributors = simulation.getDistributors();
         List<Producer> producers = simulation.getProducers();
 
-//        OutputData outputData = new OutputData(consumers, distributors);
-//        OutputLoader outputLoader = new OutputLoader(outputPath, outputData);
-//        outputLoader.writeData();
+        OutputData outputData = new OutputData(consumers, distributors, producers);
+        OutputLoader outputLoader = new OutputLoader(outputPath, outputData);
+        outputLoader.writeData();
     }
 }
