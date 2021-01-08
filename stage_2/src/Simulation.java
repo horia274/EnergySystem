@@ -52,13 +52,10 @@ public final class Simulation {
      * compute first round of simulation
      */
     private void firstTurn() {
-        for (int i = 0; i < producers.size(); i++) {
-            producers.get(i).notifyObservers(producers);
-            producers.get(i).addCurrentDistributors();
-        }
-
         for (Distributor distributor : distributors) {
             if (!distributor.isBankrupt()) {
+                /* choose energy producers */
+                distributor.update(producers);
                 /* recalculate contracts price */
                 distributor.computeContractPrice();
                 /* remove invalid contracts */
@@ -136,8 +133,6 @@ public final class Simulation {
      */
     private void simulateTurn(final MonthlyUpdateInputData monthlyUpdate) {
         update(monthlyUpdate);
-//        /* simulate round 0 */
-//        firstTurn();
 
         for (Distributor distributor : distributors) {
             if (!distributor.isBankrupt()) {

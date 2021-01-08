@@ -20,9 +20,9 @@ public final class ProducerOutputData {
         energyType = producer.getEnergyType().getLabel();
         energyPerDistributor = producer.getEnergyPerDistributor();
         monthlyStats = new ArrayList<>();
-        for (int i = 1; i < producer.getAllDistributors().size(); i++) {
+        for (int i = 0; i < producer.getAllDistributors().size(); i++) {
             List<Integer> distributorsIds = producer.getAllDistributors().get(i);
-            MonthlyStatOutputData monthlyStat = new MonthlyStatOutputData(i, distributorsIds);
+            MonthlyStatOutputData monthlyStat = new MonthlyStatOutputData(i + 1, distributorsIds);
             monthlyStats.add(monthlyStat);
         }
     }

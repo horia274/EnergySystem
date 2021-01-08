@@ -1,7 +1,7 @@
 Starting audit...
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Main.java:4:20: Using the '.*' form of import should be avoided - fileio.input.*. [AvoidStarImport]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Main.java:5:21: Using the '.*' form of import should be avoided - fileio.output.*. [AvoidStarImport]
-[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Main.java:27: Line is longer than 100 characters (found 130). [LineLength]
+[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Main.java:27: Line is longer than 100 characters (found 131). [LineLength]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/fileio/output/OutputData.java:18: Line is longer than 100 characters (found 125). [LineLength]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/fileio/output/DistributorOutputData.java:5:8: Unused import - strategies.EnergyChoiceStrategyType. [UnusedImports]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/PriceStrategy.java:13:5: Class 'PriceStrategy' looks like designed for extension (can be subclassed), but the method 'sortProducers' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'PriceStrategy' final or making the method 'sortProducers' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
@@ -16,8 +16,8 @@ Starting audit...
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/GreenStrategy.java:17: Line is longer than 100 characters (found 107). [LineLength]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/Strategy.java:21:5: Class 'Strategy' looks like designed for extension (can be subclassed), but the method 'chooseProducers' does not have javadoc that explains how to do that safely. If class is not designed for extension consider making the class 'Strategy' final or making the method 'chooseProducers' static/final/abstract/empty, or adding allowed annotation for the method. [DesignForExtension]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/Strategy.java:21:5: Missing a Javadoc comment. [MissingJavadocMethod]
-[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/Strategy.java:28: Line is longer than 100 characters (found 131). [LineLength]
-[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/Strategy.java:30: Line is longer than 100 characters (found 154). [LineLength]
+[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/Strategy.java:27: Line is longer than 100 characters (found 131). [LineLength]
+[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/strategies/Strategy.java:29: Line is longer than 100 characters (found 154). [LineLength]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/entities/Consumer.java:64:5: Missing a Javadoc comment. [MissingJavadocMethod]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/entities/Consumer.java:68:5: Missing a Javadoc comment. [MissingJavadocMethod]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/entities/Consumer.java:80: Line is longer than 100 characters (found 132). [LineLength]
@@ -44,7 +44,7 @@ Starting audit...
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/entities/observer/ProducerObservable.java:10:5: Missing a Javadoc comment. [MissingJavadocMethod]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Simulation.java:5:20: Using the '.*' form of import should be avoided - fileio.input.*. [AvoidStarImport]
 [ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Simulation.java:49:42: '{' at column 42 should have line break after. [LeftCurly]
-[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Simulation.java:105: Line is longer than 100 characters (found 102). [LineLength]
-[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Simulation.java:119: Line is longer than 100 characters (found 101). [LineLength]
+[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Simulation.java:102: Line is longer than 100 characters (found 102). [LineLength]
+[ERROR] /home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/./src/Simulation.java:116: Line is longer than 100 characters (found 101). [LineLength]
 Audit done.
 Checkstyle ends with 47 errors.
