@@ -4,6 +4,7 @@ import entities.Distributor;
 import entities.Producer;
 import entities.contracts.ProductionContract;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Strategy {
@@ -12,7 +13,7 @@ public abstract class Strategy {
 
     public Strategy(Distributor distributor, List<Producer> producers) {
         this.distributor = distributor;
-        this.producers = producers;
+        this.producers = new ArrayList<>(producers);
     }
 
     protected abstract void sortProducers();

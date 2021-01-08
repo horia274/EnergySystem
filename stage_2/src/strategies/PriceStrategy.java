@@ -17,7 +17,7 @@ public class PriceStrategy extends Strategy {
                 return Double.compare(p1.getPriceKW(), p2.getPriceKW());
             }
             if (p1.getEnergyPerDistributor() != p2.getEnergyPerDistributor()) {
-                return Integer.compare(p1.getEnergyPerDistributor(), p2.getEnergyPerDistributor());
+                return Integer.compare(p2.getEnergyPerDistributor(), p1.getEnergyPerDistributor());
             }
             return Integer.compare(p1.getId(), p2.getId());
         });

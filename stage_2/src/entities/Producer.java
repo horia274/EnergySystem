@@ -12,16 +12,16 @@ import java.util.Objects;
 
 public final class Producer implements ProducerObservable {
     private int id;
-    private EnergyType energyType;
+    private final EnergyType energyType;
     private int maxDistributors;
     private double priceKW;
     private int energyPerDistributor;
 
-    private List<ProductionContract> productionContracts;
+    private final List<ProductionContract> productionContracts;
     private final List<DistributorObserver> distributors;
     private boolean isUpdated;
 
-    private List<List<Integer>> allDistributors;
+    private final List<List<Integer>> allDistributors;
 
     public Producer(ProducerInputData producer, List<Distributor> distributors) {
         id = producer.getId();
@@ -29,6 +29,7 @@ public final class Producer implements ProducerObservable {
         maxDistributors = producer.getMaxDistributors();
         priceKW = producer.getPriceKW();
         energyPerDistributor = producer.getEnergyPerDistributor();
+        productionContracts = new ArrayList<>();
         this.distributors = new ArrayList<>(distributors);
         isUpdated = true;
         allDistributors = new ArrayList<>();
@@ -44,10 +45,6 @@ public final class Producer implements ProducerObservable {
 
     public EnergyType getEnergyType() {
         return energyType;
-    }
-
-    public void setEnergyType(EnergyType energyType) {
-        this.energyType = energyType;
     }
 
     public int getMaxDistributors() {
@@ -75,20 +72,8 @@ public final class Producer implements ProducerObservable {
         isUpdated = true;
     }
 
-    public List<ProductionContract> getProductionContracts() {
-        return productionContracts;
-    }
-
-    public void setProductionContracts(List<ProductionContract> productionContracts) {
-        this.productionContracts = productionContracts;
-    }
-
     public List<List<Integer>> getAllDistributors() {
         return allDistributors;
-    }
-
-    public void setAllDistributors(List<List<Integer>> allDistributors) {
-        this.allDistributors = allDistributors;
     }
 
     @Override
@@ -118,16 +103,20 @@ public final class Producer implements ProducerObservable {
     }
 
     public void addContract(ProductionContract productionContract) {
-        productionContracts.add(productionContract);
+        if (!productionContracts.contains(productionContract)) {
+            productionContracts.add(productionContract);
+        }
     }
 
-    public void removeContracts() {
+    private void removeContracts() {
         productionContracts.clear();
     }
 
     @Override
     public void register(DistributorObserver distributor) {
-        distributors.add(distributor);
+        if (!distributors.contains(distributor)) {
+            distributors.add(distributor);
+        }
     }
 
     @Override
@@ -138,11 +127,12 @@ public final class Producer implements ProducerObservable {
     @Override
     public void notifyObservers(List<Producer> producers) {
         if (isUpdated) {
-            for (DistributorObserver distributor : distributors) {
-                distributor.update(producers);
-            }
-            removeContracts();
+            List<DistributorObserver> currentDistributors = new ArrayList<>(distributors);
             unregisterAll();
+            removeContracts();
+            for (DistributorObserver currentDistributor : currentDistributors) {
+                currentDistributor.update(producers);
+            }
             isUpdated = false;
         }
     }

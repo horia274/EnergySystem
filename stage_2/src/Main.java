@@ -2,8 +2,7 @@ import entities.Consumer;
 import entities.Distributor;
 import entities.Producer;
 import fileio.input.*;
-import fileio.output.OutputData;
-import fileio.output.OutputLoader;
+import fileio.output.*;
 
 import java.util.List;
 
@@ -24,6 +23,9 @@ public final class Main {
 
         String inputPath = args[0];
         String outputPath = args[1];
+
+//        String inputPath = "/home/horia/facultate/an II/sem 1/poo/teme/EnergySystem/stage_2/checker/resources/in/basic_14.json";
+//        String outputPath = "results.txt";
 
         InputLoader inputLoader = new InputLoader(inputPath);
         InputData inputData = inputLoader.readData();

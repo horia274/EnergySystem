@@ -14,7 +14,7 @@ public class QuantityStrategy extends Strategy {
     protected void sortProducers() {
         producers.sort((p1, p2) -> {
             if (p1.getEnergyPerDistributor() != p2.getEnergyPerDistributor()) {
-                return Integer.compare(p1.getEnergyPerDistributor(), p2.getEnergyPerDistributor());
+                return Integer.compare(p2.getEnergyPerDistributor(), p1.getEnergyPerDistributor());
             }
             return Integer.compare(p1.getId(), p2.getId());
         });

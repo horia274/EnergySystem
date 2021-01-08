@@ -26,7 +26,7 @@ public final class Distributor implements DistributorObserver {
     private final List<DistributionContract> distributionContracts;
     private int contractPrice;
 
-    private int energyNeeded;
+    private final int energyNeeded;
     private EnergyChoiceStrategyType producerStrategy;
     private final List<ProductionContract> productionContracts;
 
@@ -61,14 +61,6 @@ public final class Distributor implements DistributorObserver {
         this.infrastructureCost = infrastructureCost;
     }
 
-    public int getProductionCost() {
-        return productionCost;
-    }
-
-    public void setProductionCost(final int productionCost) {
-        this.productionCost = productionCost;
-    }
-
     public int getContractPrice() {
         return contractPrice;
     }
@@ -79,10 +71,6 @@ public final class Distributor implements DistributorObserver {
 
     public int getEnergyNeeded() {
         return energyNeeded;
-    }
-
-    public void setEnergyNeeded(int energyNeeded) {
-        this.energyNeeded = energyNeeded;
     }
 
     public EnergyChoiceStrategyType getProducerStrategy() {
@@ -227,7 +215,7 @@ public final class Distributor implements DistributorObserver {
         }
     }
 
-    public void computeProductionCost() {
+    private void computeProductionCost() {
         double cost = 0;
 
         for (ProductionContract contract : productionContracts) {
@@ -242,7 +230,7 @@ public final class Distributor implements DistributorObserver {
         productionContracts.add(productionContract);
     }
 
-    public void removeAllProductionContracts() {
+    private void removeAllProductionContracts() {
         productionContracts.clear();
     }
 
@@ -254,7 +242,10 @@ public final class Distributor implements DistributorObserver {
 
     @Override
     public void update(List<Producer> producers) {
-        removeAllProductionContracts();
-        computeStrategy(producers);
+        if (!isBankrupt) {
+            removeAllProductionContracts();
+            computeStrategy(producers);
+            computeProductionCost();
+        }
     }
 }

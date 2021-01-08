@@ -52,15 +52,13 @@ public final class Simulation {
      * compute first round of simulation
      */
     private void firstTurn() {
-        for (Producer producer : producers) {
-            producer.notifyObservers(producers);
-            producer.addCurrentDistributors();
+        for (int i = 0; i < producers.size(); i++) {
+            producers.get(i).notifyObservers(producers);
+            producers.get(i).addCurrentDistributors();
         }
 
         for (Distributor distributor : distributors) {
             if (!distributor.isBankrupt()) {
-                /* recalculate production cost */
-                distributor.computeProductionCost();
                 /* recalculate contracts price */
                 distributor.computeContractPrice();
                 /* remove invalid contracts */
@@ -138,8 +136,57 @@ public final class Simulation {
      */
     private void simulateTurn(final MonthlyUpdateInputData monthlyUpdate) {
         update(monthlyUpdate);
-        /* simulate round 0 */
-        firstTurn();
+//        /* simulate round 0 */
+//        firstTurn();
+
+        for (Distributor distributor : distributors) {
+            if (!distributor.isBankrupt()) {
+                /* recalculate contracts price */
+                distributor.computeContractPrice();
+                /* remove invalid contracts */
+                distributor.removeInvalidContracts();
+            }
+        }
+
+        for (Consumer consumer : consumers) {
+            if (!consumer.isBankrupt()) {
+                /* receive salary */
+                consumer.earnSalary();
+                /* choose contract */
+                consumer.chooseContract(distributors);
+
+                /* add contract to distributor list of contracts */
+                DistributionContract distributionContract = consumer.getContract();
+                Distributor chosenDistributor = distributionContract.getDistributor();
+                chosenDistributor.addContract(distributionContract);
+
+                /* pay contract */
+                consumer.payBill();
+                /* decrease duration of contract */
+                distributionContract.decreaseContractMonths();
+            }
+        }
+
+        for (Distributor distributor : distributors) {
+            if (!distributor.isBankrupt()) {
+                /* receive money from consumers */
+                distributor.earnMoneyFromConsumers();
+                /* pay bill */
+                distributor.payBill();
+                /* remove bankrupt consumers */
+                distributor.removeBankruptConsumers();
+            } else {
+                /* removed all contracts if is bankrupt */
+                distributor.removeContractsIfIsBankrupt();
+            }
+        }
+
+        for (Producer producer : producers) {
+            producer.notifyObservers(producers);
+        }
+        for (Producer producer : producers) {
+            producer.addCurrentDistributors();
+        }
     }
 
     /**

@@ -2,6 +2,7 @@ package fileio.output;
 
 import entities.contracts.DistributionContract;
 import entities.Distributor;
+import strategies.EnergyChoiceStrategyType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,18 +36,6 @@ public final class DistributorOutputData {
         return id;
     }
 
-    public int getBudget() {
-        return budget;
-    }
-
-    public boolean getIsBankrupt() {
-        return isBankrupt;
-    }
-
-    public List<ContractOutputData> getContracts() {
-        return contracts;
-    }
-
     public int getEnergyNeededKW() {
         return energyNeededKW;
     }
@@ -55,7 +44,19 @@ public final class DistributorOutputData {
         return contractCost;
     }
 
+    public int getBudget() {
+        return budget;
+    }
+
     public String getProducerStrategy() {
         return producerStrategy;
+    }
+
+    public boolean getIsBankrupt() {
+        return isBankrupt;
+    }
+
+    public List<ContractOutputData> getContracts() {
+        return contracts;
     }
 }

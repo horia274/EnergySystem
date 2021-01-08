@@ -10,4 +10,12 @@ public final class MonthlyStatOutputData {
         this.month = month;
         this.distributorsIds = distributorsIds;
     }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public List<Integer> getDistributorsIds() {
+        return distributorsIds;
+    }
 }
