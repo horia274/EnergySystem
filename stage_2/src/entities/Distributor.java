@@ -82,6 +82,10 @@ public final class Distributor implements DistributorObserver {
         this.producerStrategy = producerStrategy;
     }
 
+    /**
+     * check if the current distributor has contract with an updated producer
+     * @return boolean value
+     */
     public boolean hasUpdatedProducer() {
         return hasUpdatedProducer;
     }
@@ -136,7 +140,7 @@ public final class Distributor implements DistributorObserver {
      * search for a distributor by id in a list of distributors
      * @param distributors list of distributors
      * @param id searched id
-     * @return Distributor object on null if not found
+     * @return Distributor object or null if not found
      */
     public static Distributor findDistributor(final List<Distributor> distributors, final int id) {
         for (Distributor distributor : distributors) {
@@ -193,10 +197,11 @@ public final class Distributor implements DistributorObserver {
 
             /* check if contract can be paid and if it has an overdue payment */
             if (!currentConsumer.isBankrupt() && !currentDistributionContract.isExpired()) {
+                int oldPrice = oldDistributionContract.getPrice();
                 if (currentConsumer.hasOverduePayment()) {
-                    budget += (int) Math.round(Math.floor(Const.OVERDUE * oldDistributionContract.getPrice()));
+                    budget += (int) Math.round(Math.floor(Const.OVERDUE * oldPrice));
                 } else if (currentDistributionContract.wasPaid()) {
-                    budget += currentDistributionContract.getPrice();
+                    budget += oldPrice;
                 }
             }
         }
@@ -228,9 +233,13 @@ public final class Distributor implements DistributorObserver {
             cost += contract.getPrice();
         }
 
-        productionCost = (int) Math.round(Math.floor(cost / 10));
+        productionCost = (int) Math.round(Math.floor(cost / Const.PROD));
     }
 
+    /**
+     * add a production contract to the list of production contracts
+     * @param productionContract given contract
+     */
     public void addProductionContract(ProductionContract productionContract) {
         productionContracts.add(productionContract);
     }
@@ -239,22 +248,16 @@ public final class Distributor implements DistributorObserver {
         productionContracts.clear();
     }
 
-    @Override
-    public boolean hasContractWith(Producer producer) {
-        for (ProductionContract contract : productionContracts) {
-            if (contract.getProducer().equals(producer)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     private void computeStrategy(List<Producer> producers) {
         StrategyFactory strategyFactory = StrategyFactory.getInstance();
         Strategy strategy = strategyFactory.createStrategy(producerStrategy, this, producers);
         strategy.chooseProducers();
     }
 
+    /**
+     * choose producers if is not bankrupt from a list of producers
+     * @param producers list of producers
+     */
     public void chooseProducers(List<Producer> producers) {
         if (!isBankrupt) {
             for (ProductionContract contract : productionContracts) {

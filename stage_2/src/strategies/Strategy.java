@@ -18,6 +18,11 @@ public abstract class Strategy {
 
     protected abstract void sortProducers();
 
+    /**
+     * Sort the producers by given criteria from strategy
+     * Choose the first producers who are still available until
+     * the energy needed by the distributor is reached
+     */
     public void chooseProducers() {
         int currentEnergy = 0;
 
@@ -27,7 +32,12 @@ public abstract class Strategy {
             if (currentEnergy < distributor.getEnergyNeeded()) {
                 if (producer.getNumberOfContracts() < producer.getMaxDistributors()) {
                     currentEnergy += producer.getEnergyPerDistributor();
-                    ProductionContract newContract = new ProductionContract(producer, distributor, producer.getPriceKW(), producer.getEnergyPerDistributor());
+
+                    double price = producer.getPriceKW();
+                    int energy = producer.getEnergyPerDistributor();
+                    ProductionContract newContract;
+                    newContract = new ProductionContract(producer, distributor, price, energy);
+
                     distributor.addProductionContract(newContract);
                     producer.addContract(newContract);
                     producer.register(distributor);

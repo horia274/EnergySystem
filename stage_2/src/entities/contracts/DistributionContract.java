@@ -71,7 +71,8 @@ public final class DistributionContract {
             return false;
         }
         DistributionContract distributionContract = (DistributionContract) o;
-        return consumer.equals(distributionContract.consumer) && distributor.equals(distributionContract.distributor);
+        return consumer.equals(distributionContract.consumer)
+                && distributor.equals(distributionContract.distributor);
     }
 
     @Override

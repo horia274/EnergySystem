@@ -2,7 +2,14 @@ import entities.Consumer;
 import entities.Producer;
 import entities.contracts.DistributionContract;
 import entities.Distributor;
-import fileio.input.*;
+
+import fileio.input.InputData;
+import fileio.input.MonthlyUpdateInputData;
+import fileio.input.ConsumerInputData;
+import fileio.input.DistributorInputData;
+import fileio.input.ProducerInputData;
+import fileio.input.DistributorChangesInputData;
+import fileio.input.ProducerChangesInputData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +53,9 @@ public final class Simulation {
         return distributors;
     }
 
-    public List<Producer> getProducers() { return producers; }
+    public List<Producer> getProducers() {
+        return producers;
+    }
 
     /**
      * compute first round of simulation
@@ -99,7 +108,7 @@ public final class Simulation {
 
     private void update(final MonthlyUpdateInputData monthlyUpdate) {
         List<ConsumerInputData> newConsumers = monthlyUpdate.getNewConsumers();
-        List<DistributorChangesInputData> distributorsChanges = monthlyUpdate.getDistributorChanges();
+        List<DistributorChangesInputData> disChanges = monthlyUpdate.getDistributorChanges();
         List<ProducerChangesInputData> producersChanges = monthlyUpdate.getProducerChanges();
 
         /* update consumers list */
@@ -109,11 +118,12 @@ public final class Simulation {
         }
 
         /* update distributors attributes */
-        for (DistributorChangesInputData distributorChanges : distributorsChanges) {
+        for (DistributorChangesInputData distributorChanges : disChanges) {
             int id = distributorChanges.getId();
             Distributor currentDistributor = Distributor.findDistributor(distributors, id);
             if (currentDistributor != null) {
-                currentDistributor.setInfrastructureCost(distributorChanges.getInfrastructureCost());
+                int infrastructure = distributorChanges.getInfrastructureCost();
+                currentDistributor.setInfrastructureCost(infrastructure);
             }
         }
 

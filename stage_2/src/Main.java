@@ -1,8 +1,10 @@
 import entities.Consumer;
 import entities.Distributor;
 import entities.Producer;
-import fileio.input.*;
-import fileio.output.*;
+import fileio.input.InputData;
+import fileio.input.InputLoader;
+import fileio.output.OutputData;
+import fileio.output.OutputLoader;
 
 import java.util.List;
 

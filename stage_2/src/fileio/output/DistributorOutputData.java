@@ -2,7 +2,6 @@ package fileio.output;
 
 import entities.contracts.DistributionContract;
 import entities.Distributor;
-import strategies.EnergyChoiceStrategyType;
 
 import java.util.ArrayList;
 import java.util.List;

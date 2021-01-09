@@ -61,10 +61,17 @@ public final class Consumer {
         return Objects.hash(id);
     }
 
+    /**
+     * Receive monthly salary
+     */
     public void earnSalary() {
         budget += monthlyIncome;
     }
 
+    /**
+     * Choose distribution contract from a list of distributors
+     * @param distributors list of distributors
+     */
     public void chooseContract(final List<Distributor> distributors) {
         int minPrice = Integer.MAX_VALUE;
         Distributor chosenDistributor = null;
@@ -77,7 +84,8 @@ public final class Consumer {
         }
 
         /* check if current consumer has already a valid contract */
-        if (distributionContract != null && distributionContract.isValid() && !distributionContract.getDistributor().isBankrupt()) {
+        if (distributionContract != null && distributionContract.isValid()
+                && !distributionContract.getDistributor().isBankrupt()) {
             return;
         }
 
@@ -94,7 +102,8 @@ public final class Consumer {
         if (chosenDistributor != null) {
             distributionContract = new DistributionContract(this, chosenDistributor,
                     chosenDistributor.getContractLength(), chosenDistributor.getContractPrice());
-            if (!hasOverduePayment && (oldDistributionContract == null || oldDistributionContract.wasPaid())) {
+            if (!hasOverduePayment
+                    && (oldDistributionContract == null || oldDistributionContract.wasPaid())) {
                 oldDistributionContract = distributionContract;
             }
         }
@@ -114,6 +123,9 @@ public final class Consumer {
         return (int) Math.round(Math.floor(Const.OVERDUE * oldPrice) + currentPrice);
     }
 
+    /**
+     * Pay bill for the chosen contract
+     */
     public void payBill() {
         /* keep the status payment of old contract */
         hasOverduePayment = !oldDistributionContract.wasPaid();
@@ -136,10 +148,18 @@ public final class Consumer {
         }
     }
 
+    /**
+     * Check if the current consumer is bankrupt
+     * @return boolean value
+     */
     public boolean isBankrupt() {
         return isBankrupt;
     }
 
+    /**
+     * Check if the current consumer has an overdue payment
+     * @return boolean value
+     */
     public boolean hasOverduePayment() {
         return hasOverduePayment;
     }

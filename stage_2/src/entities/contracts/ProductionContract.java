@@ -13,7 +13,10 @@ public final class ProductionContract {
     private int distributedEnergy;
     private double price;
 
-    public ProductionContract(Producer producer, Distributor distributor, double priceKW, int distributedEnergy) {
+    public ProductionContract(Producer producer,
+                              Distributor distributor,
+                              double priceKW,
+                              int distributedEnergy) {
         this.producer = producer;
         this.distributor = distributor;
         this.priceKW = priceKW;
@@ -44,14 +47,6 @@ public final class ProductionContract {
         this.priceKW = priceKW;
     }
 
-    public int getDistributedEnergy() {
-        return distributedEnergy;
-    }
-
-    public void setDistributedEnergy(int distributedEnergy) {
-        this.distributedEnergy = distributedEnergy;
-    }
-
     public double getPrice() {
         return price;
     }
@@ -62,8 +57,12 @@ public final class ProductionContract {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         ProductionContract that = (ProductionContract) o;
         return producer.equals(that.producer) && distributor.equals(that.distributor);
     }
@@ -73,6 +72,9 @@ public final class ProductionContract {
         return Objects.hash(producer, distributor);
     }
 
+    /**
+     * Calculate the contract cost
+     */
     public void computeCost() {
         if (price == 0) {
             price = priceKW * distributedEnergy;

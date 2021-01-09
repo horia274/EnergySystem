@@ -68,6 +68,10 @@ public final class Producer implements ProducerObservable {
         return energyPerDistributor;
     }
 
+    /**
+     * if energy per distributor is updated, than isUpdated flag is set
+     * @param energyPerDistributor how much energy gives current producer
+     */
     public void setEnergyPerDistributor(int energyPerDistributor) {
         this.energyPerDistributor = energyPerDistributor;
         isUpdated = true;
@@ -79,8 +83,12 @@ public final class Producer implements ProducerObservable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Producer producer = (Producer) o;
         return id == producer.id;
     }
@@ -90,6 +98,12 @@ public final class Producer implements ProducerObservable {
         return Objects.hash(id);
     }
 
+    /**
+     * search for a producer by id in a list of producers
+     * @param producers list of producers
+     * @param id searched id
+     * @return Producers object or null if not found
+     */
     public static Producer findProducer(List<Producer> producers, int id) {
         for (Producer producer : producers) {
             if (producer.id == id) {
@@ -99,16 +113,28 @@ public final class Producer implements ProducerObservable {
         return null;
     }
 
+    /**
+     * compute the number of production contracts
+     * @return int value
+     */
     public int getNumberOfContracts() {
         return productionContracts.size();
     }
 
+    /**
+     * add a production contract in list of contracts
+     * @param productionContract given contract which will be added
+     */
     public void addContract(ProductionContract productionContract) {
         if (!productionContracts.contains(productionContract)) {
             productionContracts.add(productionContract);
         }
     }
 
+    /**
+     * remove a contract
+     * @param contract current contract
+     */
     public void removeInvalidContract(ProductionContract contract) {
         productionContracts.remove(contract);
     }
@@ -128,21 +154,23 @@ public final class Producer implements ProducerObservable {
     @Override
     public void notifyObservers() {
         if (isUpdated) {
-            List<DistributorObserver> currentDistributors = new ArrayList<>(distributors);
-            for (DistributorObserver currentDistributor : currentDistributors) {
-                currentDistributor.update();
+            for (DistributorObserver distributor : distributors) {
+                distributor.update();
             }
             isUpdated = false;
         }
     }
 
+    /**
+     * save the list of distributors id any month
+     */
     public void addCurrentDistributors() {
         List<Integer> currentDistributors = new ArrayList<>();
         for (ProductionContract contract : productionContracts) {
             Distributor currentDistributor = contract.getDistributor();
             currentDistributors.add(currentDistributor.getId());
         }
-        currentDistributors.sort(Comparator.comparingInt((Integer id) -> id));
+        currentDistributors.sort(Comparator.naturalOrder());
         allDistributors.add(currentDistributors);
     }
 }

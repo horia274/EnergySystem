@@ -2,10 +2,11 @@ package strategies;
 
 import entities.Distributor;
 import entities.Producer;
+import entities.energytypes.EnergyType;
 
 import java.util.List;
 
-public class GreenStrategy extends Strategy {
+public final class GreenStrategy extends Strategy {
     public GreenStrategy(Distributor distributor, List<Producer> producers) {
         super(distributor, producers);
     }
@@ -14,7 +15,9 @@ public class GreenStrategy extends Strategy {
     protected void sortProducers() {
         producers.sort((p1, p2) -> {
             if (p1.getEnergyType().isRenewable() != p2.getEnergyType().isRenewable()) {
-                return Boolean.compare(p2.getEnergyType().isRenewable(), p1.getEnergyType().isRenewable());
+                EnergyType e1 = p1.getEnergyType();
+                EnergyType e2 = p2.getEnergyType();
+                return Boolean.compare(e2.isRenewable(), e1.isRenewable());
             }
             if (p1.getPriceKW() != p2.getPriceKW()) {
                 return Double.compare(p1.getPriceKW(), p2.getPriceKW());

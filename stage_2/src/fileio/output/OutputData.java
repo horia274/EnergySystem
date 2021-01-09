@@ -15,7 +15,9 @@ public final class OutputData {
     private final List<DistributorOutputData> distributors;
     private final List<ProducerOutputData> energyProducers;
 
-    public OutputData(final List<Consumer> consumers, final List<Distributor> distributors, final List<Producer> producers) {
+    public OutputData(final List<Consumer> consumers,
+                      final List<Distributor> distributors,
+                      final List<Producer> producers) {
         this.consumers = new ArrayList<>();
         for (Consumer consumer : consumers) {
             this.consumers.add(new ConsumerOutputData(consumer));

@@ -5,7 +5,7 @@ import entities.Producer;
 
 import java.util.List;
 
-public class PriceStrategy extends Strategy {
+public final class PriceStrategy extends Strategy {
     public PriceStrategy(Distributor distributor, List<Producer> producers) {
         super(distributor, producers);
     }

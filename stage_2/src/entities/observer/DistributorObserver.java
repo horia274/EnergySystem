@@ -1,10 +1,9 @@
 package entities.observer;
 
-import entities.Producer;
-
-import java.util.List;
-
 public interface DistributorObserver {
+    /**
+     * when a producer receives an update, all of their distributors
+     * has to perform an update, to choose again the production contracts
+     */
     void update();
-    boolean hasContractWith(Producer producer);
 }
