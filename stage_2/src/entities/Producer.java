@@ -23,14 +23,14 @@ public final class Producer implements ProducerObservable {
 
     private final List<List<Integer>> allDistributors;
 
-    public Producer(ProducerInputData producer, List<Distributor> distributors) {
+    public Producer(ProducerInputData producer) {
         id = producer.getId();
         energyType = producer.getEnergyType();
         maxDistributors = producer.getMaxDistributors();
         priceKW = producer.getPriceKW();
         energyPerDistributor = producer.getEnergyPerDistributor();
         productionContracts = new ArrayList<>();
-        this.distributors = new ArrayList<>(distributors);
+        distributors = new ArrayList<>();
         isUpdated = true;
         allDistributors = new ArrayList<>();
     }
@@ -99,7 +99,15 @@ public final class Producer implements ProducerObservable {
     }
 
     public int getNumberOfContracts() {
-        return productionContracts.size();
+        int count = 0;
+        for (ProductionContract contract : productionContracts) {
+            Distributor distributor = contract.getDistributor();
+            if (distributor.hasContractWith(this)) {
+                count++;
+            }
+        }
+        return count;
+//        return productionContracts.size();
     }
 
     public void addContract(ProductionContract productionContract) {
@@ -108,9 +116,18 @@ public final class Producer implements ProducerObservable {
         }
     }
 
-    private void removeContracts() {
+    public void removeCurrentContracts() {
         productionContracts.clear();
     }
+
+//    public void removeOldContracts() {
+//        for (ProductionContract contract : productionContracts) {
+//            Distributor currentDistributor = contract.getDistributor();
+//            if (!currentDistributor.hasContractWith(this)) {
+//                productionContracts.remove(contract);
+//            }
+//        }
+//    }
 
     @Override
     public void register(DistributorObserver distributor) {
@@ -125,13 +142,13 @@ public final class Producer implements ProducerObservable {
     }
 
     @Override
-    public void notifyObservers(List<Producer> producers) {
+    public void notifyObservers() {
         if (isUpdated) {
             List<DistributorObserver> currentDistributors = new ArrayList<>(distributors);
             unregisterAll();
-            removeContracts();
+            removeCurrentContracts();
             for (DistributorObserver currentDistributor : currentDistributors) {
-                currentDistributor.update(producers);
+                currentDistributor.update();
             }
             isUpdated = false;
         }
@@ -141,7 +158,9 @@ public final class Producer implements ProducerObservable {
         List<Integer> currentDistributors = new ArrayList<>();
         for (ProductionContract contract : productionContracts) {
             Distributor currentDistributor = contract.getDistributor();
-            currentDistributors.add(currentDistributor.getId());
+            if (currentDistributor.hasContractWith(this)) {
+                currentDistributors.add(currentDistributor.getId());
+            }
         }
         allDistributors.add(currentDistributors);
     }

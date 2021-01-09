@@ -29,6 +29,7 @@ public final class Distributor implements DistributorObserver {
     private final int energyNeeded;
     private EnergyChoiceStrategyType producerStrategy;
     private final List<ProductionContract> productionContracts;
+    private boolean hasUpdatedProducer;
 
     public Distributor(final DistributorInputData distributorInputData) {
         id = distributorInputData.getId();
@@ -79,6 +80,10 @@ public final class Distributor implements DistributorObserver {
 
     public void setProducerStrategy(EnergyChoiceStrategyType producerStrategy) {
         this.producerStrategy = producerStrategy;
+    }
+
+    public boolean hasUpdatedProducer() {
+        return hasUpdatedProducer;
     }
 
     /**
@@ -234,18 +239,32 @@ public final class Distributor implements DistributorObserver {
         productionContracts.clear();
     }
 
+    public boolean hasContractWith(Producer producer) {
+        for (ProductionContract contract : productionContracts) {
+            if (contract.getProducer().equals(producer)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void computeStrategy(List<Producer> producers) {
         StrategyFactory strategyFactory = StrategyFactory.getInstance();
         Strategy strategy = strategyFactory.createStrategy(producerStrategy, this, producers);
         strategy.chooseProducers();
     }
 
-    @Override
-    public void update(List<Producer> producers) {
+    public void chooseProducers(List<Producer> producers) {
         if (!isBankrupt) {
             removeAllProductionContracts();
             computeStrategy(producers);
             computeProductionCost();
+            hasUpdatedProducer = false;
         }
+    }
+
+    @Override
+    public void update() {
+        hasUpdatedProducer = true;
     }
 }

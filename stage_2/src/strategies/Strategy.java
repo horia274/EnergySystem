@@ -24,12 +24,14 @@ public abstract class Strategy {
         sortProducers();
 
         for (Producer producer : producers) {
-            if (producer.getNumberOfContracts() < producer.getMaxDistributors() && currentEnergy < distributor.getEnergyNeeded()) {
-                currentEnergy += producer.getEnergyPerDistributor();
-                ProductionContract newContract = new ProductionContract(producer, distributor, producer.getPriceKW(), producer.getEnergyPerDistributor());
-                distributor.addProductionContract(newContract);
-                producer.addContract(newContract);
-                producer.register(distributor);
+            if (currentEnergy < distributor.getEnergyNeeded()) {
+                if (producer.getNumberOfContracts() < producer.getMaxDistributors()) {
+                    currentEnergy += producer.getEnergyPerDistributor();
+                    ProductionContract newContract = new ProductionContract(producer, distributor, producer.getPriceKW(), producer.getEnergyPerDistributor());
+                    distributor.addProductionContract(newContract);
+                    producer.addContract(newContract);
+                    producer.register(distributor);
+                }
             } else {
                 break;
             }

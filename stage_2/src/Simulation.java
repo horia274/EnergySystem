@@ -31,7 +31,7 @@ public final class Simulation {
         List<ProducerInputData> producerInputData = inputData.getInitialData().getProducers();
         producers = new ArrayList<>();
         for (ProducerInputData producer : producerInputData) {
-            Producer currentProducer = new Producer(producer, distributors);
+            Producer currentProducer = new Producer(producer);
             producers.add(currentProducer);
         }
 
@@ -55,7 +55,7 @@ public final class Simulation {
         for (Distributor distributor : distributors) {
             if (!distributor.isBankrupt()) {
                 /* choose energy producers */
-                distributor.update(producers);
+                distributor.chooseProducers(producers);
                 /* recalculate contracts price */
                 distributor.computeContractPrice();
                 /* remove invalid contracts */
@@ -177,7 +177,12 @@ public final class Simulation {
         }
 
         for (Producer producer : producers) {
-            producer.notifyObservers(producers);
+            producer.notifyObservers();
+        }
+        for (Distributor distributor : distributors) {
+            if (distributor.hasUpdatedProducer()) {
+                distributor.chooseProducers(producers);
+            }
         }
         for (Producer producer : producers) {
             producer.addCurrentDistributors();
