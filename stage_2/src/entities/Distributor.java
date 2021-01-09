@@ -239,6 +239,7 @@ public final class Distributor implements DistributorObserver {
         productionContracts.clear();
     }
 
+    @Override
     public boolean hasContractWith(Producer producer) {
         for (ProductionContract contract : productionContracts) {
             if (contract.getProducer().equals(producer)) {
@@ -256,6 +257,11 @@ public final class Distributor implements DistributorObserver {
 
     public void chooseProducers(List<Producer> producers) {
         if (!isBankrupt) {
+            for (ProductionContract contract : productionContracts) {
+                Producer producer = contract.getProducer();
+                producer.unregister(this);
+                producer.removeInvalidContract(contract);
+            }
             removeAllProductionContracts();
             computeStrategy(producers);
             computeProductionCost();

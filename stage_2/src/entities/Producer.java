@@ -7,6 +7,7 @@ import entities.observer.ProducerObservable;
 import fileio.input.ProducerInputData;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -99,15 +100,7 @@ public final class Producer implements ProducerObservable {
     }
 
     public int getNumberOfContracts() {
-        int count = 0;
-        for (ProductionContract contract : productionContracts) {
-            Distributor distributor = contract.getDistributor();
-            if (distributor.hasContractWith(this)) {
-                count++;
-            }
-        }
-        return count;
-//        return productionContracts.size();
+        return productionContracts.size();
     }
 
     public void addContract(ProductionContract productionContract) {
@@ -116,18 +109,9 @@ public final class Producer implements ProducerObservable {
         }
     }
 
-    public void removeCurrentContracts() {
-        productionContracts.clear();
+    public void removeInvalidContract(ProductionContract contract) {
+        productionContracts.remove(contract);
     }
-
-//    public void removeOldContracts() {
-//        for (ProductionContract contract : productionContracts) {
-//            Distributor currentDistributor = contract.getDistributor();
-//            if (!currentDistributor.hasContractWith(this)) {
-//                productionContracts.remove(contract);
-//            }
-//        }
-//    }
 
     @Override
     public void register(DistributorObserver distributor) {
@@ -137,16 +121,14 @@ public final class Producer implements ProducerObservable {
     }
 
     @Override
-    public void unregisterAll() {
-        distributors.clear();
+    public void unregister(DistributorObserver distributor) {
+        distributors.remove(distributor);
     }
 
     @Override
     public void notifyObservers() {
         if (isUpdated) {
             List<DistributorObserver> currentDistributors = new ArrayList<>(distributors);
-            unregisterAll();
-            removeCurrentContracts();
             for (DistributorObserver currentDistributor : currentDistributors) {
                 currentDistributor.update();
             }
@@ -158,10 +140,9 @@ public final class Producer implements ProducerObservable {
         List<Integer> currentDistributors = new ArrayList<>();
         for (ProductionContract contract : productionContracts) {
             Distributor currentDistributor = contract.getDistributor();
-            if (currentDistributor.hasContractWith(this)) {
-                currentDistributors.add(currentDistributor.getId());
-            }
+            currentDistributors.add(currentDistributor.getId());
         }
+        currentDistributors.sort(Comparator.comparingInt((Integer id) -> id));
         allDistributors.add(currentDistributors);
     }
 }
