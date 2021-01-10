@@ -143,10 +143,8 @@ public final class Distributor implements DistributorObserver {
      * @return Distributor object or null if not found
      */
     public static Distributor findDistributor(final List<Distributor> distributors, final int id) {
-        for (Distributor distributor : distributors) {
-            if (distributor.id == id) {
-                return distributor;
-            }
+        if (id < distributors.size()) {
+            return distributors.get(id);
         }
         return null;
     }
@@ -261,11 +259,13 @@ public final class Distributor implements DistributorObserver {
     public void chooseProducers(List<Producer> producers) {
         if (!isBankrupt) {
             for (ProductionContract contract : productionContracts) {
+                /* remove contracts for all producers who have contract with current distributor */
                 Producer producer = contract.getProducer();
                 producer.unregister(this);
                 producer.removeInvalidContract(contract);
             }
             removeAllProductionContracts();
+            /* choose new producers using strategy */
             computeStrategy(producers);
             computeProductionCost();
             hasUpdatedProducer = false;

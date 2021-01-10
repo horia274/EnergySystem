@@ -20,7 +20,9 @@ public final class GreenStrategy extends Strategy {
                 return Boolean.compare(e2.isRenewable(), e1.isRenewable());
             }
             if (p1.getPriceKW() != p2.getPriceKW()) {
-                return Double.compare(p1.getPriceKW(), p2.getPriceKW());
+                double price1 = p1.getPriceKW();
+                double price2 = p2.getPriceKW();
+                return Double.compare(price1, price2);
             }
             if (p1.getEnergyPerDistributor() != p2.getEnergyPerDistributor()) {
                 return Integer.compare(p2.getEnergyPerDistributor(), p1.getEnergyPerDistributor());

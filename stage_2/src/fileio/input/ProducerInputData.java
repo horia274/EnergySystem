@@ -2,6 +2,9 @@ package fileio.input;
 
 import entities.energytypes.EnergyType;
 
+/**
+ * contains producer information from input
+ */
 public final class ProducerInputData {
     private int id;
     private EnergyType energyType;

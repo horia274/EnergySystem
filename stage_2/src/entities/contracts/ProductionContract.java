@@ -9,8 +9,8 @@ public final class ProductionContract {
     private Producer producer;
     private Distributor distributor;
 
+    private final int distributedEnergy;
     private double priceKW;
-    private int distributedEnergy;
     private double price;
 
     public ProductionContract(Producer producer,

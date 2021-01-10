@@ -5,6 +5,9 @@ import entities.Producer;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * contains producer information for output
+ */
 public final class ProducerOutputData {
     private final int id;
     private final int maxDistributors;

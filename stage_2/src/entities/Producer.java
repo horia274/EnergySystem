@@ -105,10 +105,8 @@ public final class Producer implements ProducerObservable {
      * @return Producers object or null if not found
      */
     public static Producer findProducer(List<Producer> producers, int id) {
-        for (Producer producer : producers) {
-            if (producer.id == id) {
-                return producer;
-            }
+        if (id < producers.size()) {
+            return producers.get(id);
         }
         return null;
     }
@@ -121,7 +119,11 @@ public final class Producer implements ProducerObservable {
         return productionContracts.size();
     }
 
-    /**
+    /**for (Producer producer : producers) {
+            if (producer.id == id) {
+                return producer;
+            }
+        }
      * add a production contract in list of contracts
      * @param productionContract given contract which will be added
      */
@@ -155,6 +157,7 @@ public final class Producer implements ProducerObservable {
     public void notifyObservers() {
         if (isUpdated) {
             for (DistributorObserver distributor : distributors) {
+                /* update each observer by setting or not the *hasUpdatedProducer* flag */
                 distributor.update();
             }
             isUpdated = false;

@@ -58,13 +58,21 @@ public final class Simulation {
     }
 
     /**
-     * compute first round of simulation
+     * all distributors choose the energy producers, for the first round
      */
-    private void firstTurn() {
+    private void chooseProductionContracts() {
+        for (Distributor distributor : distributors) {
+            /* choose energy producers */
+            distributor.chooseProducers(producers);
+        }
+    }
+
+    /**
+     * perform the interaction process between customers and distributors
+     */
+    private void interactDistributorsWithCustomers() {
         for (Distributor distributor : distributors) {
             if (!distributor.isBankrupt()) {
-                /* choose energy producers */
-                distributor.chooseProducers(producers);
                 /* recalculate contracts price */
                 distributor.computeContractPrice();
                 /* remove invalid contracts */
@@ -106,6 +114,32 @@ public final class Simulation {
         }
     }
 
+    /**
+     * perform the interaction process between producers and distributors
+     */
+    private void interactDistributorsWithProducers() {
+        for (Producer producer : producers) {
+            /* notify each observer if producer is updated */
+            producer.notifyObservers();
+        }
+
+        for (Distributor distributor : distributors) {
+            /* perform the strategy again if it is necessary */
+            if (distributor.hasUpdatedProducer()) {
+                distributor.chooseProducers(producers);
+            }
+        }
+
+        for (Producer producer : producers) {
+            /* save distributors id for the current turn */
+            producer.addCurrentDistributors();
+        }
+    }
+
+    /**
+     * perform update
+     * @param monthlyUpdate given update
+     */
     private void update(final MonthlyUpdateInputData monthlyUpdate) {
         List<ConsumerInputData> newConsumers = monthlyUpdate.getNewConsumers();
         List<DistributorChangesInputData> disChanges = monthlyUpdate.getDistributorChanges();
@@ -138,65 +172,21 @@ public final class Simulation {
     }
 
     /**
+     * compute first round of simulation
+     */
+    private void firstTurn() {
+        chooseProductionContracts();
+        interactDistributorsWithCustomers();
+    }
+
+    /**
      * simulate intermediate round
      * @param monthlyUpdate new consumers list and new distributors attributes
      */
     private void simulateTurn(final MonthlyUpdateInputData monthlyUpdate) {
         update(monthlyUpdate);
-
-        for (Distributor distributor : distributors) {
-            if (!distributor.isBankrupt()) {
-                /* recalculate contracts price */
-                distributor.computeContractPrice();
-                /* remove invalid contracts */
-                distributor.removeInvalidContracts();
-            }
-        }
-
-        for (Consumer consumer : consumers) {
-            if (!consumer.isBankrupt()) {
-                /* receive salary */
-                consumer.earnSalary();
-                /* choose contract */
-                consumer.chooseContract(distributors);
-
-                /* add contract to distributor list of contracts */
-                DistributionContract distributionContract = consumer.getContract();
-                Distributor chosenDistributor = distributionContract.getDistributor();
-                chosenDistributor.addContract(distributionContract);
-
-                /* pay contract */
-                consumer.payBill();
-                /* decrease duration of contract */
-                distributionContract.decreaseContractMonths();
-            }
-        }
-
-        for (Distributor distributor : distributors) {
-            if (!distributor.isBankrupt()) {
-                /* receive money from consumers */
-                distributor.earnMoneyFromConsumers();
-                /* pay bill */
-                distributor.payBill();
-                /* remove bankrupt consumers */
-                distributor.removeBankruptConsumers();
-            } else {
-                /* removed all contracts if is bankrupt */
-                distributor.removeContractsIfIsBankrupt();
-            }
-        }
-
-        for (Producer producer : producers) {
-            producer.notifyObservers();
-        }
-        for (Distributor distributor : distributors) {
-            if (distributor.hasUpdatedProducer()) {
-                distributor.chooseProducers(producers);
-            }
-        }
-        for (Producer producer : producers) {
-            producer.addCurrentDistributors();
-        }
+        interactDistributorsWithCustomers();
+        interactDistributorsWithProducers();
     }
 
     /**

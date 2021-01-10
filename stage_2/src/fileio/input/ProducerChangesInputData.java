@@ -1,5 +1,8 @@
 package fileio.input;
 
+/**
+ * contains the updates for a producer
+ */
 public final class ProducerChangesInputData {
     private int id;
     private int energyPerDistributor;

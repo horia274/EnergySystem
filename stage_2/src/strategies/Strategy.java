@@ -26,18 +26,22 @@ public abstract class Strategy {
     public void chooseProducers() {
         int currentEnergy = 0;
 
+        /* sort producers by given strategy */
         sortProducers();
 
         for (Producer producer : producers) {
             if (currentEnergy < distributor.getEnergyNeeded()) {
                 if (producer.getNumberOfContracts() < producer.getMaxDistributors()) {
+                    /* add producers until the current distributor reached his demand of energy */
                     currentEnergy += producer.getEnergyPerDistributor();
 
+                    /* create new production contract */
                     double price = producer.getPriceKW();
                     int energy = producer.getEnergyPerDistributor();
                     ProductionContract newContract;
                     newContract = new ProductionContract(producer, distributor, price, energy);
 
+                    /* add new contract to distributor and to producer */
                     distributor.addProductionContract(newContract);
                     producer.addContract(newContract);
                     producer.register(distributor);
