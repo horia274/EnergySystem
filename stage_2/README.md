@@ -1,4 +1,4 @@
-# Energy System
+# EnergySystem
 ## Etapa 2
 
 #### Ignat Andrei-Horia 324CA
@@ -24,7 +24,9 @@ Tutorial Jackson JSON:
 #### Clase de input / output
 
 InputData si OutputData sunt principalele clase de input si de output folosite,
-pentru a putea intai citi si ulterior scrie rezultatele in fisierul json.
+pentru a putea intai citi si ulterior scrie rezultatele in fisierul json. Acestea
+se folosesc de clase mai mici, cum ar fi *ConsumerInputData*, *ProducerInputdata*
+etc, care extrag informatiile despre consumator respectectiv producator.
 
 #### Simulation
 
@@ -33,7 +35,7 @@ care simuleaza prima luna, *luna 0* si ulterior fiecare luna urmatoare.
 
 #### Consumer
 
-Clasa consumer de data aceasta modeleaza direct un consumator concret, fara a mai
+Clasa **Consumer** de data aceasta modeleaza direct un consumator concret, fara a mai
 face diferentierea intre tipuri de consumatori, cum implementasem la etapa1.
 Functionalitatea in schimb, nu difera cu absolut nimic, relatia dintre consumator
 si distribuitor functionand identic.
@@ -41,7 +43,7 @@ si distribuitor functionand identic.
 #### Distributor
 
 Aceasta clasa modeleaza un distribuitor real, folosindu-se de clasele de tipul
-"strategie" pentru a a-si alege producatorii. Aceasta clasa **implementeaza
+"strategie" pentru a-si alege producatorii. Aceasta clasa **implementeaza
 interfata DistributorObserver**, caci un distribuitor este vazut ca un **observer**
 in relatia sa cu producatorii. Se pastreaza vechile funcionalitati care stabilesc
 legatura din consumator si distribuitor si se adauga noile functionalitati petru
@@ -58,7 +60,7 @@ acestuia.
 Impreuna cu cele 3 clase mostenitoare, **GreenStrategy**, **PriceStrategy** si
 **QuantityStrategy**, acestea sorteaza dupa criteriul specificat o lista de
 producatori, data in constructor si adauga contracte de tip *production* intre
-distribuitorul, tot primit in constructor si producatorii selectati.
+distribuitorul primit tot in constructor si producatorii selectati.
 
 #### Contractele
 
@@ -72,7 +74,7 @@ un distribuitor, fiind exact cel din etapa 1.
 ##### ProductionContract
 
 Stabileste legatura intre un producator si un distribuitor, calculand pretul
-in functie de energie transmisa.
+in functie de energia transmisa.
 
 ### Flow
 
@@ -88,7 +90,7 @@ Apoi se executa interactiunea dintre distribuitori si consumatori, ca la etapa1
 
 Se efectueaza update-uri, folosind o metoda *update*, ce primeste schimbarile
 din luna curenta. Apoi interactioneaza distribuitorii cu consumatorii ca mai sus,
-iar partea noua consta in interactiunea distribuitorilor cu producatorii.
+iar partea noua consta in *interactiunea distribuitorilor cu producatorii*.
 
 Astfel, se parcurg producatorii in ordine si se apeleaza o metoda de notificare,
 prin care anunta distribuitorii cu care producatorul curent are contract, daca
@@ -104,9 +106,11 @@ producator, pentru a putea scrie aceste informatii in fisierul de output.
 ### Elemente de design OOP
 
 Am impartit clasele in pachete cu nume sugestive, de exemplu, *contractele*
-se afla in pachetul *conrtract* etc. Se pot remarca mostenirea intre strategiile
-specifice si clasa **Strategy**, implementarea interfetelor **DistributorObserver**
-si **ProducerObservable** si abstractizarea strategiei prin clasa abstracta **Strategy**.
+se afla in pachetul *contracts* etc.
+
+Se pot remarca mostenirea intre strategiile specifice si clasa **Strategy**,
+implementarea interfetelor **DistributorObserver** si **ProducerObservable**
+si abstractizarea strategiei prin clasa abstracta **Strategy**.
 
 ### Design patterns
 
@@ -116,25 +120,25 @@ Ca design pattern-uri am folosit:
 
 In momentul in care un **producator (observable)**, primeste update, acesta isi
 modifica campul *isUpdated* la statusul de *true*. Apoi este parcursa lista de 
-**distribuitori (observers)** si se seteaza campul *hasUpdatedProducer* pe *true*.
-In final, daca acest flag este setat pe true, se apeleaza **computeStrategy**,
-care foloseste **Strategy**.
+**distribuitori (observers)** cu care acesta are contract si se seteaza campul
+*hasUpdatedProducer* pe *true*. In final, se apeleaza **computeStrategy**,care
+foloseste metode **chooseProducers** din clasa **Strategy**.
 
 #### Strategy
 
 Evident este folosit pentru a implementa cele 3 strategii. Astfel, clasa abstracta
 **Strategy** are metoda comuna de alegere a producatorilor, iar cele mostenite,
-implementeaza algoritmul de sortare a acestora.
+implementeaza algoritmul de sortare specific.
 
 #### Factory
 
-Am folosit acest design pattern pentru a construi instante ale strategiilor, caci
+Am folosit acest design pattern pentru *a construi instante ale strategiilor*, caci
 acestea sunt de mai multe tipuri. Este folosit de catre *distribuitor* in momentul
 in care isi alege din nou producatorii cu care semneaza contract.
 
 #### Singleton
 
-Intrucat am nevoia de o singura instanta de **factory**, care sa genereze strategii
+Intrucat am nevoie de o singura instanta de **factory**, care sa genereze strategii
 variate, am considerat util imbinarea acestor doua design pattern-uri.
 
 
