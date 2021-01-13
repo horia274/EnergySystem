@@ -112,6 +112,9 @@ Se pot remarca mostenirea intre strategiile specifice si clasa **Strategy**,
 implementarea interfetelor **DistributorObserver** si **ProducerObservable**
 si abstractizarea strategiei prin clasa abstracta **Strategy**.
 
+O mai buna observare a relatiei dintre clase se poate observa din **diagrama
+UML** aflate in fisierul *diagram.jpg*.
+
 ### Design patterns
 
 Ca design pattern-uri am folosit:
