@@ -119,11 +119,7 @@ public final class Producer implements ProducerObservable {
         return productionContracts.size();
     }
 
-    /**for (Producer producer : producers) {
-            if (producer.id == id) {
-                return producer;
-            }
-        }
+    /**
      * add a production contract in list of contracts
      * @param productionContract given contract which will be added
      */
