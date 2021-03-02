@@ -1,8 +1,6 @@
 # EnergySystem
 ## Etapa 2
 
-#### Ignat Andrei-Horia 324CA
-
 ### Rulare teste
 
 Clasa Test#main
